@@ -80,10 +80,10 @@ async def get_user_info(user_id: int) -> dict:
             return None
 
 async def is_fully_registered(user_id: int) -> bool:
-    """Check if user has completed the full name registration (has surname)."""
+    """Check if user has provided a name (first_name is non-empty)."""
     async with aiosqlite.connect(DB_NAME) as db:
         async with db.execute(
-            'SELECT surname FROM users WHERE user_id = ? AND surname IS NOT NULL AND surname != ""',
+            'SELECT first_name FROM users WHERE user_id = ? AND first_name IS NOT NULL AND first_name != ""',
             (user_id,)
         ) as cursor:
             row = await cursor.fetchone()
