@@ -35,12 +35,10 @@ logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 
 # --- Database path ---
-if os.path.exists("/home/KidsDoc"):
-    DB_NAME = "/home/KidsDoc/KidsDoc/clinic_bot.db"
-else:
-    DB_NAME = "clinic_bot.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_NAME = os.path.join(BASE_DIR, "clinic_bot.db")
 
-WEBHOOK_URL = "https://KidsDoc.pythonanywhere.com/webhook"
+WEBHOOK_URL = "https://syrio.pythonanywhere.com/webhook"
 
 # --- Dispatcher (created once at module level) ---
 dp = Dispatcher()

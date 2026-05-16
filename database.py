@@ -2,11 +2,8 @@ import aiosqlite
 import datetime
 import os
 
-# Use absolute path on PythonAnywhere, relative path locally
-if os.path.exists("/home/KidsDoc"):
-    DB_NAME = "/home/KidsDoc/KidsDoc/clinic_bot.db"
-else:
-    DB_NAME = "clinic_bot.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_NAME = os.path.join(BASE_DIR, "clinic_bot.db")
 
 async def init_db():
     async with aiosqlite.connect(DB_NAME) as db:
