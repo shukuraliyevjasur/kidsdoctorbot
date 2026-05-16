@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -65,7 +65,7 @@ async def handle_language(message: Message, state: FSMContext):
         )
     else:
         await state.set_state(OnboardingFSM.waiting_for_name)
-        await message.answer(_("enter_name", lang))
+        await message.answer(_("enter_name", lang), reply_markup=ReplyKeyboardRemove())
 
 
 @router.message(OnboardingFSM.waiting_for_name)
