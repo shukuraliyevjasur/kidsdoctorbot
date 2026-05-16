@@ -75,7 +75,8 @@ TRANSLATIONS = {
         'th_name': 'Name',
         'th_service': 'Service',
         'th_review_text': 'Review Text',
-        'th_review_date': 'Review Date'
+        'th_review_date': 'Review Date',
+        'dept_stats': 'Dept Stats',
     },
     'ru': {
         'title': '🏥 Панель управления ботом клиники',
@@ -102,7 +103,8 @@ TRANSLATIONS = {
         'th_name': 'Имя',
         'th_service': 'Услуга',
         'th_review_text': 'Текст отзыва',
-        'th_review_date': 'Дата отзыва'
+        'th_review_date': 'Дата отзыва',
+        'dept_stats': 'Отделения',
     },
     'uz': {
         'title': '🏥 Klinika boti paneli',
@@ -129,7 +131,8 @@ TRANSLATIONS = {
         'th_name': 'Ism',
         'th_service': 'Xizmat',
         'th_review_text': 'Sharh matni',
-        'th_review_date': 'Sharh sanasi'
+        'th_review_date': 'Sharh sanasi',
+        'dept_stats': 'Bo\'limlar',
     }
 }
 
@@ -163,19 +166,19 @@ def dashboard():
         users = conn.execute('SELECT * FROM users').fetchall()
         total_users = len(users)
 
-        # Services dropdown
+        # Services dropdown — use lang-independent keys
         services_query = conn.execute(
             'SELECT DISTINCT service_name FROM reviews WHERE service_name IS NOT NULL'
         ).fetchall()
-        services = [t['all_services']] + sorted(
-            [row['service_name'] for row in services_query if row['service_name']]
-        )
+        services = sorted([row['service_name'] for row in services_query if row['service_name']])
 
-        # Filter
-        selected_service = request.args.get('service', t['all_services'])
+        # Filter — 'all' is the sentinel; never a translated string
+        selected_service = request.args.get('service', 'all')
+        if selected_service not in services:
+            selected_service = 'all'
 
-        # Reviews — now fetches surname and sorts newest-first
-        if selected_service in (t['all_services'], 'All Services'):
+        # Reviews — newest-first
+        if selected_service == 'all':
             reviews = conn.execute('''
                 SELECT r.id, r.user_id, u.username, u.first_name, u.surname,
                        r.service_name, r.rating, r.review_text, r.review_date
@@ -225,7 +228,105 @@ def dashboard():
 
 
 # =========================================================================
-#  ROUTE 2 — WEBHOOK LISTENER  (POST /webhook)
+#  ROUTE 2 — DEPARTMENTS DASHBOARD  (GET /departments)
+# =========================================================================
+
+DEPT_LABELS = {
+    'pediatrician': {'ru': 'Педиатр',     'uz': 'Pediatr',     'en': 'Pediatrician'},
+    'dentist':      {'ru': 'Стоматолог',  'uz': 'Stomatolog',  'en': 'Dentist'},
+    'ent':          {'ru': 'ЛОР',         'uz': 'LOR',         'en': 'ENT'},
+    'orthopedist':  {'ru': 'Ортопед',     'uz': 'Ortoped',     'en': 'Orthopedist'},
+    'allergist':    {'ru': 'Аллерголог',  'uz': 'Allergolog',  'en': 'Allergist'},
+    'massage':      {'ru': 'Массаж',      'uz': 'Massaj',      'en': 'Massage'},
+    'diagnostics':  {'ru': 'Диагностика', 'uz': 'Diagnostika', 'en': 'Diagnostics'},
+}
+
+DEPT_UI = {
+    'pediatrician': {'icon': '👶', 'color': '#1D4ED8', 'bg': '#EFF6FF'},
+    'dentist':      {'icon': '🦷', 'color': '#6D28D9', 'bg': '#F5F3FF'},
+    'ent':          {'icon': '👂', 'color': '#065F46', 'bg': '#ECFDF5'},
+    'orthopedist':  {'icon': '🦴', 'color': '#92400E', 'bg': '#FFFBEB'},
+    'allergist':    {'icon': '🌿', 'color': '#991B1B', 'bg': '#FEF2F2'},
+    'massage':      {'icon': '💆', 'color': '#86198F', 'bg': '#FDF4FF'},
+    'diagnostics':  {'icon': '🔬', 'color': '#3730A3', 'bg': '#EEF2FF'},
+}
+
+DEPT_TRANSLATIONS = {
+    'en': {
+        'title': '🏥 Department Ratings',
+        'back': '← Back to Dashboard',
+        'dept_overview': 'Department Overview',
+        'reviews': 'reviews',
+        'no_data': 'No reviews yet',
+        'total_users': 'Total Users',
+        'total_reviews': 'Total Reviews',
+    },
+    'ru': {
+        'title': '🏥 Рейтинги отделений',
+        'back': '← На главную',
+        'dept_overview': 'Обзор отделений',
+        'reviews': 'отзывов',
+        'no_data': 'Пока нет отзывов',
+        'total_users': 'Всего пользователей',
+        'total_reviews': 'Всего отзывов',
+    },
+    'uz': {
+        'title': '🏥 Bo\'limlar reytingi',
+        'back': '← Bosh sahifaga',
+        'dept_overview': 'Bo\'limlar sharhi',
+        'reviews': 'sharh',
+        'no_data': 'Hozircha sharhlar yo\'q',
+        'total_users': 'Jami foydalanuvchilar',
+        'total_reviews': 'Jami sharhlar',
+    },
+}
+
+@app.route('/departments')
+def departments():
+    try:
+        conn = get_db_connection()
+        lang = request.args.get('lang', 'en')
+        if lang not in DEPT_TRANSLATIONS:
+            lang = 'en'
+        t = DEPT_TRANSLATIONS[lang]
+
+        dept_stats = conn.execute('''
+            SELECT service_name,
+                   COUNT(*) as review_count,
+                   ROUND(AVG(CAST(rating AS FLOAT)), 1) as avg_rating,
+                   MIN(rating) as min_rating,
+                   MAX(rating) as max_rating
+            FROM reviews
+            WHERE service_name IS NOT NULL
+            GROUP BY service_name
+            ORDER BY avg_rating DESC
+        ''').fetchall()
+
+        total_users = conn.execute('SELECT COUNT(*) FROM users').fetchone()[0]
+        total_reviews = conn.execute('SELECT COUNT(*) FROM reviews').fetchone()[0]
+        conn.close()
+
+        return render_template(
+            'departments.html',
+            dept_stats=dept_stats,
+            dept_labels=DEPT_LABELS,
+            dept_ui=DEPT_UI,
+            total_users=total_users,
+            total_reviews=total_reviews,
+            lang=lang,
+            t=t,
+        )
+    except Exception as e:
+        return render_template(
+            'departments.html', error=str(e),
+            dept_stats=[], dept_labels=DEPT_LABELS, dept_ui=DEPT_UI,
+            total_users=0, total_reviews=0,
+            lang='en', t=DEPT_TRANSLATIONS['en'],
+        )
+
+
+# =========================================================================
+#  ROUTE 3 — WEBHOOK LISTENER  (POST /webhook)
 # =========================================================================
 
 @app.route('/webhook', methods=['POST'])
@@ -257,7 +358,7 @@ def webhook():
 
 
 # =========================================================================
-#  ROUTE 3 — SET WEBHOOK  (GET /set_webhook)
+#  ROUTE 4 — SET WEBHOOK  (GET /set_webhook)
 # =========================================================================
 
 @app.route('/set_webhook')

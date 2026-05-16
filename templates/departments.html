@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t.title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:        #F4F1EB;
+            --white:     #FFFFFF;
+            --green:     #1E3A2F;
+            --green-mid: #2D5A45;
+            --amber:     #C8893A;
+            --text:      #1A1A1A;
+            --muted:     #6B7280;
+            --border:    #E0DBD0;
+            --star:      #F59E0B;
+            --shadow:    0 2px 16px rgba(30,58,47,0.08);
+            --radius:    14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            background: var(--green);
+            color: #fff;
+            padding: 0 2.5rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.01em;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .topbar-title span { font-size: 1.6rem; }
+        .topbar-nav { display: flex; gap: 0.5rem; align-items: center; }
+        .nav-btn {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.25);
+            padding: 0.35rem 0.9rem;
+            border-radius: 6px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .nav-btn:hover { background: var(--amber); border-color: var(--amber); }
+        .lang-btn { background: rgba(255,255,255,0.12); }
+        .lang-btn.active { background: var(--amber); border-color: var(--amber); }
+
+        /* ── LAYOUT ── */
+        .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+        /* ── SUMMARY CARDS ── */
+        .summary-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+        .summary-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem 1.75rem;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--green);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .summary-card.amber { border-top-color: var(--amber); }
+        .summary-icon { font-size: 2rem; flex-shrink: 0; }
+        .summary-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .summary-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.25rem;
+            color: var(--green);
+            line-height: 1.1;
+        }
+        .summary-card.amber .summary-value { color: var(--amber); }
+
+        /* ── SECTION TITLE ── */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--green);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        /* ── DEPT GRID ── */
+        .dept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 3rem;
+        }
+        .dept-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .dept-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(30,58,47,0.13);
+        }
+        .dept-card-header {
+            padding: 1.25rem 1.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .dept-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+        .dept-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--text);
+            line-height: 1.2;
+        }
+        .dept-count {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-top: 0.15rem;
+        }
+        .dept-card-body {
+            padding: 0 1.5rem 1.5rem;
+        }
+        .dept-rating-row {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            margin-bottom: 0.6rem;
+        }
+        .dept-rating-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.75rem;
+            color: var(--amber);
+            line-height: 1;
+        }
+        .dept-rating-max {
+            font-size: 1rem;
+            color: var(--muted);
+            font-weight: 600;
+        }
+        .dept-stars { font-size: 1.3rem; }
+        .star-filled { color: var(--star); }
+        .star-half   { color: var(--star); opacity: 0.6; }
+        .star-empty  { color: #E5E7EB; }
+
+        /* rating bar */
+        .rating-bar-wrap {
+            margin-top: 0.75rem;
+            background: #F3F4F6;
+            border-radius: 50px;
+            height: 8px;
+            overflow: hidden;
+        }
+        .rating-bar-fill {
+            height: 100%;
+            border-radius: 50px;
+            background: linear-gradient(90deg, var(--amber), #E8A84C);
+            transition: width 0.4s ease;
+        }
+
+        /* ── NO DATA ── */
+        .no-data-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .no-data-icon { font-size: 1.75rem; }
+        .no-data-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            color: var(--text);
+        }
+        .no-data-sub { font-size: 0.9rem; color: var(--muted); }
+
+        /* ── ERROR ── */
+        .error-box {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #991B1B;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 700px) {
+            .summary-row { grid-template-columns: 1fr; }
+            .dept-grid   { grid-template-columns: 1fr; }
+            .topbar      { padding: 0 1rem; }
+            .page        { padding: 1.5rem 1rem 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="topbar-title">
+        <span>🏥</span> KidsDoc
+    </div>
+    <div class="topbar-nav">
+        <a href="/?lang=ru" class="nav-btn lang-btn {% if lang == 'ru' %}active{% endif %}">RU</a>
+        <a href="/?lang=uz" class="nav-btn lang-btn {% if lang == 'uz' %}active{% endif %}">UZ</a>
+        <a href="/?lang={{ lang }}" class="nav-btn" style="background:rgba(255,255,255,0.08);">{{ t.back }}</a>
+    </div>
+</div>
+
+<div class="page">
+
+    {% if error is defined and error %}
+    <div class="error-box"><strong>⚠️ Error:</strong> {{ error }}</div>
+
+    {% else %}
+
+    <!-- SUMMARY -->
+    <div class="summary-row">
+        <div class="summary-card">
+            <div class="summary-icon">👥</div>
+            <div>
+                <div class="summary-label">{{ t.total_users }}</div>
+                <div class="summary-value">{{ total_users }}</div>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-icon">💬</div>
+            <div>
+                <div class="summary-label">{{ t.total_reviews }}</div>
+                <div class="summary-value">{{ total_reviews }}</div>
+            </div>
+        </div>
+        <div class="summary-card amber">
+            <div class="summary-icon">🏆</div>
+            <div>
+                <div class="summary-label">{{ t.dept_overview }}</div>
+                <div class="summary-value">{{ dept_stats | length }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DEPT CARDS -->
+    <div class="section-title">{{ t.dept_overview }}</div>
+
+    <div class="dept-grid">
+        {% set all_dept_keys = ['pediatrician','dentist','ent','orthopedist','allergist','massage','diagnostics'] %}
+        {% set stats_map = {} %}
+        {% for row in dept_stats %}{% set _ = stats_map.update({row.service_name: row}) %}{% endfor %}
+
+        {% for key in all_dept_keys %}
+            {% set ui = dept_ui.get(key, {'icon': '🏥', 'color': '#374151', 'bg': '#F3F4F6'}) %}
+            {% set label = dept_labels.get(key, {}).get(lang, key) %}
+            {% set row = stats_map.get(key) %}
+
+            {% if row %}
+            <div class="dept-card">
+                <div class="dept-card-header">
+                    <div class="dept-icon" style="background:{{ ui.bg }}; color:{{ ui.color }}">{{ ui.icon }}</div>
+                    <div>
+                        <div class="dept-name">{{ label }}</div>
+                        <div class="dept-count">{{ row.review_count }} {{ t.reviews }}</div>
+                    </div>
+                </div>
+                <div class="dept-card-body">
+                    <div class="dept-rating-row">
+                        <span class="dept-rating-num">{{ row.avg_rating }}</span>
+                        <span class="dept-rating-max">/ 5</span>
+                    </div>
+                    <div class="dept-stars">
+                        {% set full = row.avg_rating | int %}
+                        {% set half = 1 if (row.avg_rating - full) >= 0.5 else 0 %}
+                        {% set empty = 5 - full - half %}
+                        {% for i in range(full) %}<span class="star-filled">★</span>{% endfor %}
+                        {% if half %}<span class="star-half">★</span>{% endif %}
+                        {% for i in range(empty) %}<span class="star-empty">★</span>{% endfor %}
+                    </div>
+                    <div class="rating-bar-wrap">
+                        <div class="rating-bar-fill" style="width: {{ ((row.avg_rating / 5) * 100) | int }}%"></div>
+                    </div>
+                </div>
+            </div>
+
+            {% else %}
+            <div class="no-data-card">
+                <div class="no-data-icon" style="background:{{ ui.bg }}; width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center;">{{ ui.icon }}</div>
+                <div>
+                    <div class="no-data-name">{{ label }}</div>
+                    <div class="no-data-sub">{{ t.no_data }}</div>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    {% endif %}
+</div>
+</body>
+</html>

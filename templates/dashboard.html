@@ -271,7 +271,7 @@
     <div class="lang-form">
         <a href="/?lang=ru&service={{ selected_service }}" class="lang-btn {% if lang == 'ru' %}active{% endif %}">RU</a>
         <a href="/?lang=uz&service={{ selected_service }}" class="lang-btn {% if lang == 'uz' %}active{% endif %}">UZ</a>
-        <a href="/?lang=en&service={{ selected_service }}" class="lang-btn {% if lang == 'en' %}active{% endif %}">EN</a>
+        <a href="/departments?lang={{ lang }}" class="lang-btn dept-btn">📊 {{ t.dept_stats }}</a>
     </div>
 </div>
 
@@ -311,6 +311,10 @@
 
     <!-- Department filter tabs -->
     <div class="filter-wrap">
+        <a href="/?lang={{ lang }}&service=all"
+           class="filter-tab {% if selected_service == 'all' %}active{% endif %}">
+            {{ t.all_services }}
+        </a>
         {% for srv in services %}
         <a href="/?lang={{ lang }}&service={{ srv }}"
            class="filter-tab {% if srv == selected_service %}active{% endif %}">
