@@ -1,0 +1,9 @@
+app = "kidsdoctorbot"
+primary_region = "arn"
+
+[build]
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1
