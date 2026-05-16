@@ -5,8 +5,13 @@ from aiogram.types import (
 from locales import _
 
 DEPARTMENTS = [
-    "pediatrician", "dentist", "ent",
-    "orthopedist", "allergist", "massage", "diagnostics",
+    "pediatrician", "neurology",
+    "orthopedist",  "ent",
+    "dentist",      "immunology",
+    "gynecology",   "massage",
+    "laboratory",   "neurosonography",
+    "uzi",          "procedure",
+    "allergist",    "diagnostics",
 ]
 
 
@@ -32,10 +37,12 @@ def welcome_back_keyboard(lang: str) -> ReplyKeyboardMarkup:
 
 
 def department_keyboard(lang: str) -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=_("dept_" + dept, lang), callback_data=f"dept:{dept}")]
+    buttons = [
+        InlineKeyboardButton(text=_("dept_" + dept, lang), callback_data=f"dept:{dept}")
         for dept in DEPARTMENTS
-    ])
+    ]
+    rows = [buttons[i:i+2] for i in range(0, len(buttons), 2)]
+    return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
 def rating_keyboard() -> InlineKeyboardMarkup:

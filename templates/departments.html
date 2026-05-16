@@ -286,7 +286,7 @@
     <div class="section-title">{{ t.dept_overview }}</div>
 
     <div class="dept-grid">
-        {% set all_dept_keys = ['pediatrician','dentist','ent','orthopedist','allergist','massage','diagnostics'] %}
+        {% set all_dept_keys = ['pediatrician','neurology','orthopedist','ent','dentist','immunology','gynecology','massage','laboratory','neurosonography','uzi','procedure','allergist','diagnostics'] %}
         {% set stats_map = {} %}
         {% for row in dept_stats %}{% set _ = stats_map.update({row.service_name: row}) %}{% endfor %}
 

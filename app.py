@@ -232,23 +232,37 @@ def dashboard():
 # =========================================================================
 
 DEPT_LABELS = {
-    'pediatrician': {'ru': 'Педиатр',     'uz': 'Pediatr',     'en': 'Pediatrician'},
-    'dentist':      {'ru': 'Стоматолог',  'uz': 'Stomatolog',  'en': 'Dentist'},
-    'ent':          {'ru': 'ЛОР',         'uz': 'LOR',         'en': 'ENT'},
-    'orthopedist':  {'ru': 'Ортопед',     'uz': 'Ortoped',     'en': 'Orthopedist'},
-    'allergist':    {'ru': 'Аллерголог',  'uz': 'Allergolog',  'en': 'Allergist'},
-    'massage':      {'ru': 'Массаж',      'uz': 'Massaj',      'en': 'Massage'},
-    'diagnostics':  {'ru': 'Диагностика', 'uz': 'Diagnostika', 'en': 'Diagnostics'},
+    'pediatrician':    {'ru': 'Педиатрия',            'uz': 'Pediatriya',                'en': 'Pediatrics'},
+    'neurology':       {'ru': 'Детская неврология',   'uz': 'Bolalar nevrologiyasi',     'en': 'Neurology'},
+    'orthopedist':     {'ru': 'Ортопедия',             'uz': 'Ortopediya',                'en': 'Orthopedics'},
+    'ent':             {'ru': 'ЛОР',                   'uz': 'LOR',                       'en': 'ENT'},
+    'dentist':         {'ru': 'Детская стоматология',  'uz': 'Bolalar stomatologiyasi',   'en': 'Dentistry'},
+    'immunology':      {'ru': 'Иммунология',           'uz': 'Immunologiya',              'en': 'Immunology'},
+    'gynecology':      {'ru': 'Гинекология',           'uz': 'Ginekologiya',              'en': 'Gynecology'},
+    'massage':         {'ru': 'Массаж и физиотерапия', 'uz': 'Massaj va fizioterapiya',   'en': 'Massage & Physio'},
+    'laboratory':      {'ru': 'Лаборатория',           'uz': 'Laboratoriya',              'en': 'Laboratory'},
+    'neurosonography': {'ru': 'Нейросонография',       'uz': 'Neyrosonografiya',          'en': 'Neurosonography'},
+    'uzi':             {'ru': 'УЗИ',                   'uz': 'UZI xizmati',               'en': 'Ultrasound'},
+    'procedure':       {'ru': 'Процедурный кабинет',   'uz': 'Muolaja xizmati',           'en': 'Procedures'},
+    'allergist':       {'ru': 'Аллергология',          'uz': 'Allergolog',                'en': 'Allergology'},
+    'diagnostics':     {'ru': 'Диагностика',           'uz': 'Diagnostika',               'en': 'Diagnostics'},
 }
 
 DEPT_UI = {
-    'pediatrician': {'icon': '👶', 'color': '#1D4ED8', 'bg': '#EFF6FF'},
-    'dentist':      {'icon': '🦷', 'color': '#6D28D9', 'bg': '#F5F3FF'},
-    'ent':          {'icon': '👂', 'color': '#065F46', 'bg': '#ECFDF5'},
-    'orthopedist':  {'icon': '🦴', 'color': '#92400E', 'bg': '#FFFBEB'},
-    'allergist':    {'icon': '🌿', 'color': '#991B1B', 'bg': '#FEF2F2'},
-    'massage':      {'icon': '💆', 'color': '#86198F', 'bg': '#FDF4FF'},
-    'diagnostics':  {'icon': '🔬', 'color': '#3730A3', 'bg': '#EEF2FF'},
+    'pediatrician':    {'icon': '👶', 'color': '#1D4ED8', 'bg': '#EFF6FF'},
+    'neurology':       {'icon': '🧠', 'color': '#7C3AED', 'bg': '#F5F3FF'},
+    'orthopedist':     {'icon': '🦴', 'color': '#92400E', 'bg': '#FFFBEB'},
+    'ent':             {'icon': '👂', 'color': '#065F46', 'bg': '#ECFDF5'},
+    'dentist':         {'icon': '🦷', 'color': '#0E7490', 'bg': '#ECFEFF'},
+    'immunology':      {'icon': '🛡️', 'color': '#1D4ED8', 'bg': '#DBEAFE'},
+    'gynecology':      {'icon': '🌸', 'color': '#BE185D', 'bg': '#FDF2F8'},
+    'massage':         {'icon': '💆', 'color': '#86198F', 'bg': '#FDF4FF'},
+    'laboratory':      {'icon': '🧪', 'color': '#065F46', 'bg': '#D1FAE5'},
+    'neurosonography': {'icon': '👼', 'color': '#B45309', 'bg': '#FEF3C7'},
+    'uzi':             {'icon': '🔊', 'color': '#1E40AF', 'bg': '#DBEAFE'},
+    'procedure':       {'icon': '💉', 'color': '#065F46', 'bg': '#ECFDF5'},
+    'allergist':       {'icon': '🌿', 'color': '#991B1B', 'bg': '#FEF2F2'},
+    'diagnostics':     {'icon': '🔬', 'color': '#3730A3', 'bg': '#EEF2FF'},
 }
 
 DEPT_TRANSLATIONS = {
