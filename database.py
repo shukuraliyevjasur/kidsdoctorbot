@@ -36,6 +36,14 @@ async def init_db():
                 FOREIGN KEY (user_id) REFERENCES users(user_id)
             )
         ''')
+        # Bot state — replaces aiogram MemoryStorage (survives event-loop restarts)
+        await db.execute('''
+            CREATE TABLE IF NOT EXISTS bot_states (
+                user_id INTEGER PRIMARY KEY,
+                state   TEXT    NOT NULL DEFAULT '',
+                data    TEXT    NOT NULL DEFAULT ''
+            )
+        ''')
         # Migration: add surname column to existing databases that lack it
         try:
             await db.execute('ALTER TABLE users ADD COLUMN surname TEXT')
@@ -105,6 +113,31 @@ async def ensure_user_exists(user_id: int, username: str):
         await db.execute('''
             INSERT OR IGNORE INTO users (user_id, username) VALUES (?, ?)
         ''', (user_id, username))
+        await db.commit()
+
+async def get_bot_state(user_id: int) -> str:
+    async with aiosqlite.connect(DB_NAME) as db:
+        async with db.execute('SELECT state FROM bot_states WHERE user_id = ?', (user_id,)) as cursor:
+            row = await cursor.fetchone()
+            return row[0] if row else ''
+
+async def get_bot_state_data(user_id: int) -> str:
+    async with aiosqlite.connect(DB_NAME) as db:
+        async with db.execute('SELECT data FROM bot_states WHERE user_id = ?', (user_id,)) as cursor:
+            row = await cursor.fetchone()
+            return row[0] if row else ''
+
+async def set_bot_state(user_id: int, state: str, data: str = ''):
+    async with aiosqlite.connect(DB_NAME) as db:
+        await db.execute('''
+            INSERT INTO bot_states (user_id, state, data) VALUES (?, ?, ?)
+            ON CONFLICT(user_id) DO UPDATE SET state=excluded.state, data=excluded.data
+        ''', (user_id, state, data))
+        await db.commit()
+
+async def clear_bot_state(user_id: int):
+    async with aiosqlite.connect(DB_NAME) as db:
+        await db.execute('DELETE FROM bot_states WHERE user_id = ?', (user_id,))
         await db.commit()
 
 async def save_review(user_id: int, service_name: str, rating: int, review_text: str):
