@@ -1,279 +1,389 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ t.title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0e1117;
-            --text-color: #fafafa;
-            --secondary-bg: #262730;
-            --primary: #ff4b4b;
-            --border-color: rgba(250, 250, 250, 0.2);
-            --header-color: #a1a1aa;
+            --bg:        #F4F1EB;
+            --white:     #FFFFFF;
+            --green:     #1E3A2F;
+            --green-mid: #2D5A45;
+            --amber:     #C8893A;
+            --text:      #1A1A1A;
+            --muted:     #6B7280;
+            --border:    #E0DBD0;
+            --star:      #F59E0B;
+            --shadow:    0 2px 16px rgba(30,58,47,0.08);
+            --radius:    14px;
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: "Source Sans Pro", sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-            margin: 0;
-            padding: 2rem;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
             line-height: 1.6;
+            min-height: 100vh;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .header-row {
+
+        /* ── TOPBAR ── */
+        .topbar {
+            background: var(--green);
+            color: #fff;
+            padding: 0 2.5rem;
+            height: 70px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            justify-content: space-between;
         }
-        h1 { font-size: 2.2rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 0.5rem; }
-        h3 { font-size: 1.4rem; font-weight: 600; margin-top: 2rem; margin-bottom: 1rem; }
-        hr { border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0; }
-        
-        .lang-switcher select {
-            width: auto;
-            min-width: 120px;
-            padding: 0.4rem;
-        }
-        
-        .metrics-row {
+        .topbar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.01em;
             display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            align-items: center;
+            gap: 0.6rem;
         }
-        .metric-box {
-            padding: 0;
-            flex: 1;
-        }
-        .metric-label { font-size: 0.9rem; color: var(--header-color); margin-bottom: 0.2rem; }
-        .metric-value { font-size: 2rem; font-weight: 400; }
-        .star-rating { color: #facc15; font-size: 1.5rem; margin-left: 0.5rem; }
-        
-        .filter-section { margin-bottom: 1.5rem; }
-        .filter-label { font-size: 0.9rem; margin-bottom: 0.5rem; display: block; }
-        select {
-            background-color: var(--secondary-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 0.6rem;
-            border-radius: 0.25rem;
-            width: 100%;
-            max-width: 400px;
-            font-size: 1rem;
-        }
-        select:focus { outline: none; border-color: var(--primary); }
-        
-        .table-container {
-            overflow-x: auto;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
-            border-radius: 0.25rem;
-            background-color: var(--secondary-bg);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .topbar-title span { font-size: 1.6rem; }
+
+        .lang-form { display: flex; gap: 0.5rem; }
+        .lang-btn {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.25);
+            padding: 0.35rem 0.9rem;
+            border-radius: 6px;
+            font-family: 'Nunito', sans-serif;
             font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
         }
-        th, td {
-            padding: 0.75rem 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
+        .lang-btn:hover, .lang-btn.active {
+            background: var(--amber);
+            border-color: var(--amber);
         }
-        th { font-weight: 500; color: var(--header-color); border-bottom: 2px solid var(--border-color); }
-        tr:last-child td { border-bottom: none; }
-        
+
+        /* ── LAYOUT ── */
+        .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+        /* ── STAT CARDS ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+        .stat-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.75rem 2rem;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--green);
+        }
+        .stat-card.amber { border-top-color: var(--amber); }
+        .stat-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.5rem;
+        }
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--green);
+            line-height: 1;
+        }
+        .stat-card.amber .stat-value { color: var(--amber); }
+        .stat-stars {
+            font-size: 1.3rem;
+            color: var(--star);
+            margin-top: 0.4rem;
+        }
+
+        /* ── SECTION TITLE ── */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--green);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        /* ── FILTER TABS ── */
+        .filter-wrap { margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .filter-tab {
+            display: inline-block;
+            padding: 0.45rem 1.1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            border: 2px solid var(--border);
+            color: var(--muted);
+            background: var(--white);
+            transition: all 0.15s;
+        }
+        .filter-tab:hover { border-color: var(--green); color: var(--green); }
+        .filter-tab.active { background: var(--green); color: #fff; border-color: var(--green); }
+
+        /* ── REVIEW CARDS ── */
+        .reviews-grid { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 3rem; }
         .review-card {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem 1.75rem;
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1.25rem;
+            align-items: start;
         }
-        .avatar {
-            width: 30px;
-            height: 30px;
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
+        .review-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--green);
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .review-body { min-width: 0; }
+        .review-top {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.4rem;
+        }
+        .review-name { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+        .review-date { font-size: 0.85rem; color: var(--muted); }
+        .dept-badge {
+            display: inline-block;
+            padding: 0.2rem 0.75rem;
+            border-radius: 50px;
             font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
         }
-        .card-content {
-            flex: 1;
+        .review-text {
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.6;
+            margin-top: 0.5rem;
         }
-        .review-info {
-            background-color: rgba(255, 255, 255, 0.05);
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border-left: 4px solid #0068c9;
+        .review-stars {
+            font-size: 1.5rem;
+            color: var(--star);
+            white-space: nowrap;
+            flex-shrink: 0;
         }
-        
-        .error-state {
-            padding: 1rem;
-            background-color: rgba(255, 75, 75, 0.2);
-            color: #ff4b4b;
-            border-radius: 0.25rem;
-            margin-bottom: 2rem;
-            border: 1px solid #ff4b4b;
-        }
+
+        /* dept badge colors */
+        .dept-pediatrician { background: #EFF6FF; color: #1D4ED8; }
+        .dept-dentist       { background: #F5F3FF; color: #6D28D9; }
+        .dept-ent           { background: #ECFDF5; color: #065F46; }
+        .dept-orthopedist   { background: #FFFBEB; color: #92400E; }
+        .dept-allergist     { background: #FEF2F2; color: #991B1B; }
+        .dept-massage       { background: #FDF4FF; color: #86198F; }
+        .dept-diagnostics   { background: #EEF2FF; color: #3730A3; }
+        .dept-default       { background: #F3F4F6; color: #374151; }
+
+        /* ── EMPTY STATE ── */
         .empty-state {
-            padding: 1rem;
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--text-color);
-            border-radius: 0.25rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--muted);
+            font-size: 1.1rem;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+
+        /* ── USERS TABLE ── */
+        .table-wrap {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        thead { background: var(--green); color: #fff; }
+        th {
+            padding: 0.9rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        td {
+            padding: 0.9rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+        tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: #faf8f4; }
+
+        /* ── ERROR ── */
+        .error-box {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #991B1B;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            font-size: 1rem;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 700px) {
+            .stats-row { grid-template-columns: 1fr; }
+            .review-card { grid-template-columns: auto 1fr; }
+            .review-stars { grid-column: 2; }
+            .topbar { padding: 0 1rem; }
+            .page { padding: 1.5rem 1rem 3rem; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        
-        {% if error %}
-            <div class="error-state">
-                <strong>Error connecting to database.</strong> Please make sure the bot has run at least once to create the 'clinic_bot.db' file.<br>
-                Details: {{ error }}
+
+<div class="topbar">
+    <div class="topbar-title">
+        <span>🏥</span> KidsDoc
+    </div>
+    <div class="lang-form">
+        <a href="/?lang=ru&service={{ selected_service }}" class="lang-btn {% if lang == 'ru' %}active{% endif %}">RU</a>
+        <a href="/?lang=uz&service={{ selected_service }}" class="lang-btn {% if lang == 'uz' %}active{% endif %}">UZ</a>
+        <a href="/?lang=en&service={{ selected_service }}" class="lang-btn {% if lang == 'en' %}active{% endif %}">EN</a>
+    </div>
+</div>
+
+<div class="page">
+
+    {% if error %}
+    <div class="error-box">
+        <strong>⚠️ Database not found.</strong> Send at least one message to the bot first to initialise it.<br>
+        <small>{{ error }}</small>
+    </div>
+
+    {% else %}
+
+    <!-- STATS -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-label">{{ t.total_users }}</div>
+            <div class="stat-value">{{ total_users }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">{{ t.total_reviews }}</div>
+            <div class="stat-value">{{ total_reviews }}</div>
+        </div>
+        <div class="stat-card amber">
+            <div class="stat-label">{{ t.avg_rating }}</div>
+            <div class="stat-value">{% if avg_rating > 0 %}{{ avg_rating }}{% else %}—{% endif %}</div>
+            {% if avg_rating > 0 %}
+            <div class="stat-stars">
+                {% for i in range(avg_rating | int) %}★{% endfor %}{% if avg_rating % 1 >= 0.5 %}½{% endif %}
             </div>
-        {% else %}
-            
-            <div class="header-row">
-                <h1>{{ t.title }}</h1>
-                <div class="lang-switcher">
-                    <form id="lang-form" action="/" method="GET" style="display:inline;">
-                        <input type="hidden" name="service" value="{{ selected_service }}">
-                        <select name="lang" onchange="document.getElementById('lang-form').submit()">
-                            <option value="en" {% if lang == 'en' %}selected{% endif %}>English 🇬🇧</option>
-                            <option value="ru" {% if lang == 'ru' %}selected{% endif %}>Русский 🇷🇺</option>
-                            <option value="uz" {% if lang == 'uz' %}selected{% endif %}>O'zbekcha 🇺🇿</option>
-                        </select>
-                    </form>
-                </div>
-            </div>
-        
-            <h3>{{ t.quick_stats }}</h3>
-            <div class="metrics-row">
-                <div class="metric-box">
-                    <div class="metric-label">{{ t.total_users }}</div>
-                    <div class="metric-value">{{ total_users }}</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-label">{{ t.total_reviews }}</div>
-                    <div class="metric-value">{{ total_reviews }}</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-label">{{ t.avg_rating }}</div>
-                    <div class="metric-value">
-                        {% if avg_rating > 0 %}
-                            {{ avg_rating }} <span class="star-rating">★</span>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            
-            <hr>
-            
-            <!-- ==================== USERS TABLE ==================== -->
-            <h3>{{ t.reg_users }}</h3>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>{{ t.th_user_id }}</th>
-                            <th>{{ t.th_username }}</th>
-                            <th>{{ t.th_first_name }}</th>
-                            <th>{{ t.th_surname }}</th>
-                            <th>{{ t.th_joined_date }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in users %}
-                        <tr>
-                            <td>{{ user.user_id }}</td>
-                            <td>{% if user.username %}@{{ user.username }}{% else %}-{% endif %}</td>
-                            <td>{{ user.first_name or '-' }}</td>
-                            <td>{{ user.surname or '-' }}</td>
-                            <td>{{ user.joined_date }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            
-            <hr>
-            
-            <!-- ==================== REVIEWS TABLE ==================== -->
-            <h3>{{ t.feedback }}</h3>
-            
-            <div class="filter-section">
-                <span class="filter-label">{{ t.filter_label }}</span>
-                <form id="filter-form" action="/" method="GET">
-                    <input type="hidden" name="lang" value="{{ lang }}">
-                    <select name="service" id="service-filter" onchange="document.getElementById('filter-form').submit()">
-                        {% for srv in services %}
-                        <option value="{{ srv }}" {% if srv == selected_service %}selected{% endif %}>{{ srv }}</option>
-                        {% endfor %}
-                    </select>
-                </form>
-            </div>
-            
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>{{ t.th_id }}</th>
-                            <th>{{ t.th_first_name }}</th>
-                            <th>{{ t.th_surname }}</th>
-                            <th>{{ t.th_service }}</th>
-                            <th>{{ t.rating }}</th>
-                            <th>{{ t.th_review_text }}</th>
-                            <th>{{ t.th_review_date }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for r in reviews %}
-                        <tr>
-                            <td>{{ loop.index }}</td>
-                            <td>{{ r.first_name or '-' }}</td>
-                            <td>{{ r.surname or '-' }}</td>
-                            <td>{{ r.service_name }}</td>
-                            <td>{{ r.rating }} ⭐</td>
-                            <td>{{ r.review_text[:80] }}{% if r.review_text|length > 80 %}...{% endif %}</td>
-                            <td>{{ r.review_date }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- ==================== DETAILED REVIEW CARDS ==================== -->
-            <h3>{{ t.detailed_reviews }}</h3>
-            {% if reviews|length == 0 %}
-                <div class="empty-state">{{ t.no_reviews }} {{ selected_service }}.</div>
-            {% else %}
-                {% for r in reviews %}
-                <div class="review-card">
-                    <div class="avatar">👤</div>
-                    <div class="card-content">
-                        <strong>{{ r.service_name|upper }}</strong> 
-                        ({{ t.user }}: {% if r.first_name %}{{ r.first_name }}{% endif %} {% if r.surname %}{{ r.surname }}{% endif %}{% if not r.first_name and not r.surname %}-{% endif %})<br>
-                        <em>{{ r.review_date }}</em> | {{ t.rating }}: {{ r.rating }} ⭐
-                        <div class="review-info" style="margin-top: 0.5rem;">
-                            {{ r.review_text }}
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
             {% endif %}
-            
+        </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="section-title">{{ t.feedback }}</div>
+
+    <!-- Department filter tabs -->
+    <div class="filter-wrap">
+        {% for srv in services %}
+        <a href="/?lang={{ lang }}&service={{ srv }}"
+           class="filter-tab {% if srv == selected_service %}active{% endif %}">
+            {{ srv }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <div class="reviews-grid">
+        {% if reviews | length == 0 %}
+        <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            {{ t.no_reviews }} {{ selected_service }}.
+        </div>
+        {% else %}
+            {% for r in reviews %}
+            {% set name = (r.first_name or '') ~ (' ' ~ r.surname if r.surname else '') %}
+            {% set initial = (r.first_name or r.surname or '?')[0] | upper %}
+            {% set dept_map = {
+                'pediatrician': 'Педиатр / Pediatr',
+                'dentist':      'Стоматолог / Stomatolog',
+                'ent':          'ЛОР / LOR',
+                'orthopedist':  'Ортопед / Ortoped',
+                'allergist':    'Аллерголог / Allergolog',
+                'massage':      'Массаж / Massaj',
+                'diagnostics':  'Диагностика / Diagnostika'
+            } %}
+            <div class="review-card">
+                <div class="review-avatar">{{ initial }}</div>
+                <div class="review-body">
+                    <div class="review-top">
+                        <span class="review-name">{{ name.strip() or '—' }}</span>
+                        <span class="dept-badge dept-{{ r.service_name }}">
+                            {{ dept_map.get(r.service_name, r.service_name) }}
+                        </span>
+                        <span class="review-date">{{ r.review_date[:16] }}</span>
+                    </div>
+                    <div class="review-text">{{ r.review_text }}</div>
+                </div>
+                <div class="review-stars">
+                    {% for i in range(r.rating) %}★{% endfor %}{% for i in range(5 - r.rating) %}<span style="color:#E5E7EB">★</span>{% endfor %}
+                </div>
+            </div>
+            {% endfor %}
         {% endif %}
     </div>
+
+    <!-- USERS TABLE -->
+    <div class="section-title">{{ t.reg_users }}</div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>{{ t.th_first_name }}</th>
+                    <th>{{ t.th_username }}</th>
+                    <th>{{ t.th_joined_date }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ ((user.first_name or '') ~ (' ' ~ user.surname if user.surname else '')).strip() or '—' }}</td>
+                    <td>{% if user.username %}@{{ user.username }}{% else %}—{% endif %}</td>
+                    <td>{{ user.joined_date[:16] if user.joined_date else '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% endif %}
+</div>
 </body>
 </html>
