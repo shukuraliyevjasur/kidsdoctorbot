@@ -212,6 +212,10 @@
             border: 2px solid transparent;
             overflow: hidden;
             transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
         }
         .dept-card:hover {
             transform: translateY(-3px);
@@ -282,6 +286,17 @@
             border-radius: 50px;
             background: linear-gradient(90deg, var(--pink), #FF6EC7);
             transition: width 0.5s ease;
+        }
+
+        .view-arrow {
+            font-size: 1.1rem;
+            color: var(--muted);
+            transition: color 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        .dept-card:hover .view-arrow {
+            color: var(--pink);
+            transform: translateX(3px);
         }
 
         /* ── NO DATA CARD ── */
@@ -410,13 +425,14 @@
             {% set row = stats_map.get(key) %}
 
             {% if row %}
-            <div class="dept-card">
+            <a class="dept-card" href="/?service={{ key }}&lang={{ lang }}">
                 <div class="dept-card-header">
                     <div class="dept-icon" style="background:{{ ui.bg }}; color:{{ ui.color }}">{{ ui.icon }}</div>
-                    <div>
+                    <div style="flex:1">
                         <div class="dept-name">{{ label }}</div>
                         <div class="dept-count">{{ row.review_count }} {{ t.reviews }}</div>
                     </div>
+                    <div class="view-arrow">→</div>
                 </div>
                 <div class="dept-card-body">
                     <div class="dept-rating-row">
@@ -435,7 +451,7 @@
                         <div class="rating-bar-fill" style="width: {{ ((row.avg_rating / 5) * 100) | int }}%"></div>
                     </div>
                 </div>
-            </div>
+            </a>
 
             {% else %}
             <div class="no-data-card">
