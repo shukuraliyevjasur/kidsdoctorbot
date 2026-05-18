@@ -12,6 +12,7 @@ import asyncio
 import logging
 import os
 import sqlite3
+import traceback
 
 from flask import Flask, render_template, request, jsonify
 
@@ -343,6 +344,30 @@ def departments():
 #  ROUTE 3 — WEBHOOK LISTENER  (POST /webhook)
 # =========================================================================
 
+@app.route('/debug')
+def debug():
+    results = {}
+    # DB tables
+    try:
+        conn = get_db_connection()
+        tables = conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
+        results['tables'] = [t[0] for t in tables]
+        results['bot_states_count'] = conn.execute("SELECT COUNT(*) FROM bot_states").fetchone()[0]
+        results['recent_states'] = [
+            dict(r) for r in conn.execute(
+                "SELECT user_id, state, data FROM bot_states LIMIT 10"
+            ).fetchall()
+        ]
+        conn.close()
+        results['db'] = 'ok'
+    except Exception as e:
+        results['db'] = str(e)
+    # Token check
+    results['token_set'] = bool(config.BOT_TOKEN)
+    results['token_prefix'] = config.BOT_TOKEN[:8] + '...' if config.BOT_TOKEN else None
+    return jsonify(results)
+
+
 @app.route('/webhook', methods=['POST'])
 def webhook():
     """Receive Telegram updates and feed them to the aiogram Dispatcher."""
@@ -365,9 +390,9 @@ def webhook():
 
         asyncio.run(process_update())
         return jsonify({"ok": True}), 200
-        
+
     except Exception as e:
-        logging.error(f"Webhook error: {e}")
+        logging.error(f"Webhook error: {e}\n{traceback.format_exc()}")
         return jsonify({"ok": False, "error": str(e)}), 500
 
 
