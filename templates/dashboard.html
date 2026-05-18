@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ t.title }}</title>
+    <title>Kids Doctor — Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg:        #F4F1EB;
-            --white:     #FFFFFF;
-            --green:     #1E3A2F;
-            --green-mid: #2D5A45;
-            --amber:     #C8893A;
-            --text:      #1A1A1A;
-            --muted:     #6B7280;
-            --border:    #E0DBD0;
-            --star:      #F59E0B;
-            --shadow:    0 2px 16px rgba(30,58,47,0.08);
-            --radius:    14px;
+            --pink:    #E91E8C;
+            --pink-lt: #FFF0F8;
+            --cyan:    #00B4D8;
+            --cyan-lt: #E0F7FA;
+            --yellow:  #FFB800;
+            --yellow-lt: #FFFDE7;
+            --navy:    #1A1A3E;
+            --text:    #2D2D5B;
+            --muted:   #8890B5;
+            --bg:      #F0F6FF;
+            --white:   #FFFFFF;
+            --border:  #E4E9F7;
+            --shadow:  0 4px 20px rgba(26,26,62,0.08);
+            --radius:  16px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,107 +30,59 @@
             background: var(--bg);
             color: var(--text);
             font-family: 'Nunito', sans-serif;
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.6;
             min-height: 100vh;
         }
 
         /* ── TOPBAR ── */
         .topbar {
-            background: var(--green);
-            color: #fff;
+            background: var(--white);
+            border-bottom: 2px solid var(--border);
             padding: 0 2.5rem;
-            height: 70px;
+            height: 68px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .topbar-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            letter-spacing: 0.01em;
+        .topbar-brand {
             display: flex;
             align-items: center;
             gap: 0.6rem;
-        }
-        .topbar-title span { font-size: 1.6rem; }
-
-        .lang-form { display: flex; gap: 0.5rem; }
-        .lang-btn {
-            background: rgba(255,255,255,0.12);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.25);
-            padding: 0.35rem 0.9rem;
-            border-radius: 6px;
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
             text-decoration: none;
-            transition: background 0.2s;
         }
-        .lang-btn:hover, .lang-btn.active {
-            background: var(--amber);
-            border-color: var(--amber);
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--pink), #FF6EC7);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
         }
-
-        /* ── LAYOUT ── */
-        .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
-
-        /* ── STAT CARDS ── */
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.25rem;
-            margin-bottom: 2.5rem;
+        .brand-text { line-height: 1.1; }
+        .brand-name {
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: var(--pink);
+            letter-spacing: 0.02em;
+            display: block;
         }
-        .stat-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 1.75rem 2rem;
-            box-shadow: var(--shadow);
-            border-top: 4px solid var(--green);
-        }
-        .stat-card.amber { border-top-color: var(--amber); }
-        .stat-label {
-            font-size: 0.9rem;
-            font-weight: 600;
+        .brand-sub {
+            font-size: 0.65rem;
+            font-weight: 700;
             color: var(--muted);
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
-            margin-bottom: 0.5rem;
         }
-        .stat-value {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            color: var(--green);
-            line-height: 1;
-        }
-        .stat-card.amber .stat-value { color: var(--amber); }
-        .stat-stars {
-            font-size: 1.3rem;
-            color: var(--star);
-            margin-top: 0.4rem;
-        }
-
-        /* ── SECTION TITLE ── */
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--green);
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.6rem;
-            border-bottom: 2px solid var(--border);
-        }
-
-        /* ── FILTER TABS ── */
-        .filter-wrap { margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .filter-tab {
-            display: inline-block;
-            padding: 0.45rem 1.1rem;
+        .topbar-nav { display: flex; gap: 0.5rem; align-items: center; }
+        .nav-btn {
+            padding: 0.4rem 1rem;
             border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
             cursor: pointer;
             text-decoration: none;
             border: 2px solid var(--border);
@@ -135,81 +90,203 @@
             background: var(--white);
             transition: all 0.15s;
         }
-        .filter-tab:hover { border-color: var(--green); color: var(--green); }
-        .filter-tab.active { background: var(--green); color: #fff; border-color: var(--green); }
+        .nav-btn:hover { border-color: var(--pink); color: var(--pink); }
+        .nav-btn.active { background: var(--pink); color: #fff; border-color: var(--pink); }
+        .nav-btn.pink-outline { border-color: var(--pink); color: var(--pink); }
+        .nav-btn.pink-outline:hover { background: var(--pink); color: #fff; }
+        .nav-btn.refresh { border-color: var(--cyan); color: var(--cyan); font-size: 1rem; }
+        .nav-btn.refresh:hover { background: var(--cyan); color: #fff; }
+
+        /* ── LAYOUT ── */
+        .page { max-width: 1140px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+        /* ── HERO ── */
+        .hero {
+            background: linear-gradient(135deg, var(--navy) 0%, #2D2D7A 100%);
+            border-radius: 20px;
+            padding: 2rem 2.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 200px; height: 200px;
+            background: rgba(233,30,140,0.15);
+            border-radius: 50%;
+        }
+        .hero-emoji { font-size: 3.5rem; flex-shrink: 0; }
+        .hero-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--pink);
+            background: rgba(233,30,140,0.15);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 0.4rem;
+        }
+        .hero-title { font-size: 1.6rem; font-weight: 900; line-height: 1.2; }
+        .hero-sub { font-size: 0.9rem; color: rgba(255,255,255,0.65); margin-top: 0.3rem; }
+
+        /* ── STAT CARDS ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 2.25rem;
+        }
+        .stat-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem 1.75rem;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--cyan);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .stat-card:nth-child(2) { border-left-color: var(--pink); }
+        .stat-card:nth-child(3) { border-left-color: var(--yellow); }
+        .stat-icon {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .stat-card:nth-child(1) .stat-icon { background: var(--cyan-lt); }
+        .stat-card:nth-child(2) .stat-icon { background: var(--pink-lt); }
+        .stat-card:nth-child(3) .stat-icon { background: var(--yellow-lt); }
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--navy);
+            line-height: 1;
+            margin-top: 0.1rem;
+        }
+        .stat-card:nth-child(3) .stat-value { color: var(--yellow); }
+        .stat-stars { font-size: 1rem; color: var(--yellow); margin-top: 0.2rem; }
+
+        /* ── SECTION TITLE ── */
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: var(--navy);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: var(--border);
+            margin-left: 0.75rem;
+        }
+
+        /* ── FILTER TABS ── */
+        .filter-wrap { margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .filter-tab {
+            display: inline-block;
+            padding: 0.4rem 1.1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            border: 2px solid var(--border);
+            color: var(--muted);
+            background: var(--white);
+            transition: all 0.15s;
+        }
+        .filter-tab:hover { border-color: var(--pink); color: var(--pink); }
+        .filter-tab.active { background: var(--pink); color: #fff; border-color: var(--pink); }
 
         /* ── REVIEW CARDS ── */
         .reviews-grid { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 3rem; }
         .review-card {
             background: var(--white);
             border-radius: var(--radius);
-            padding: 1.5rem 1.75rem;
+            padding: 1.4rem 1.75rem;
             box-shadow: var(--shadow);
             display: grid;
             grid-template-columns: auto 1fr auto;
             gap: 1.25rem;
             align-items: start;
+            border-top: 3px solid transparent;
+            transition: border-color 0.2s;
         }
+        .review-card:hover { border-top-color: var(--pink); }
         .review-avatar {
-            width: 48px;
-            height: 48px;
+            width: 46px; height: 46px;
             border-radius: 50%;
-            background: var(--green);
+            background: linear-gradient(135deg, var(--pink), #FF6EC7);
             color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 900;
             flex-shrink: 0;
         }
         .review-body { min-width: 0; }
         .review-top {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.65rem;
             flex-wrap: wrap;
             margin-bottom: 0.4rem;
         }
-        .review-name { font-size: 1.05rem; font-weight: 700; color: var(--text); }
-        .review-date { font-size: 0.85rem; color: var(--muted); }
+        .review-name { font-size: 1rem; font-weight: 800; color: var(--navy); }
+        .review-date { font-size: 0.8rem; color: var(--muted); }
         .dept-badge {
             display: inline-block;
-            padding: 0.2rem 0.75rem;
+            padding: 0.18rem 0.7rem;
             border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.03em;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
         }
-        .review-text {
-            font-size: 1rem;
-            color: #333;
-            line-height: 1.6;
-            margin-top: 0.5rem;
-        }
-        .review-stars {
-            font-size: 1.5rem;
-            color: var(--star);
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
+        .review-text { font-size: 0.95rem; color: var(--text); line-height: 1.55; margin-top: 0.4rem; }
+        .review-stars { font-size: 1.3rem; color: var(--yellow); white-space: nowrap; flex-shrink: 0; }
 
         /* dept badge colors */
-        .dept-pediatrician { background: #EFF6FF; color: #1D4ED8; }
-        .dept-dentist       { background: #F5F3FF; color: #6D28D9; }
-        .dept-ent           { background: #ECFDF5; color: #065F46; }
-        .dept-orthopedist   { background: #FFFBEB; color: #92400E; }
-        .dept-allergist     { background: #FEF2F2; color: #991B1B; }
-        .dept-massage       { background: #FDF4FF; color: #86198F; }
-        .dept-diagnostics   { background: #EEF2FF; color: #3730A3; }
-        .dept-default       { background: #F3F4F6; color: #374151; }
+        .dept-pediatrician    { background: #E3F2FD; color: #1565C0; }
+        .dept-neurology       { background: #F3E5F5; color: #6A1B9A; }
+        .dept-dentist         { background: #E0F7FA; color: #00695C; }
+        .dept-ent             { background: #E8F5E9; color: #2E7D32; }
+        .dept-orthopedist     { background: #FFF8E1; color: #E65100; }
+        .dept-allergist       { background: #FCE4EC; color: #AD1457; }
+        .dept-immunology      { background: #E3F2FD; color: #0D47A1; }
+        .dept-gynecology      { background: #FCE4EC; color: #C62828; }
+        .dept-massage         { background: #F3E5F5; color: #7B1FA2; }
+        .dept-laboratory      { background: #E8F5E9; color: #1B5E20; }
+        .dept-neurosonography { background: #FFF3E0; color: #BF360C; }
+        .dept-uzi             { background: #E3F2FD; color: #1A237E; }
+        .dept-procedure       { background: #E8F5E9; color: #004D40; }
+        .dept-diagnostics     { background: #EDE7F6; color: #4527A0; }
+        .dept-default         { background: #F5F5F5; color: #424242; }
 
         /* ── EMPTY STATE ── */
         .empty-state {
             text-align: center;
             padding: 3rem 1rem;
             color: var(--muted);
-            font-size: 1.1rem;
             background: var(--white);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
@@ -224,32 +301,27 @@
             overflow: hidden;
             margin-bottom: 3rem;
         }
-        table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
-        thead { background: var(--green); color: #fff; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        thead { background: linear-gradient(135deg, var(--navy), #2D2D7A); color: #fff; }
         th {
             padding: 0.9rem 1.25rem;
             text-align: left;
-            font-weight: 600;
-            font-size: 0.85rem;
-            letter-spacing: 0.05em;
+            font-weight: 800;
+            font-size: 0.78rem;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
         }
-        td {
-            padding: 0.9rem 1.25rem;
-            border-bottom: 1px solid var(--border);
-            color: var(--text);
-        }
+        td { padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); color: var(--text); }
         tr:last-child td { border-bottom: none; }
-        tbody tr:hover { background: #faf8f4; }
+        tbody tr:hover { background: var(--pink-lt); }
 
         /* ── ERROR ── */
         .error-box {
-            background: #FEF2F2;
-            border: 1px solid #FECACA;
-            color: #991B1B;
+            background: #FCE4EC;
+            border: 1px solid #F48FB1;
+            color: #880E4F;
             padding: 1.5rem;
             border-radius: var(--radius);
-            font-size: 1rem;
         }
 
         /* ── RESPONSIVE ── */
@@ -259,20 +331,25 @@
             .review-stars { grid-column: 2; }
             .topbar { padding: 0 1rem; }
             .page { padding: 1.5rem 1rem 3rem; }
+            .hero { padding: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
 <div class="topbar">
-    <div class="topbar-title">
-        <span>🏥</span> Kids Doctor
-    </div>
-    <div class="lang-form">
-        <a href="/?lang=ru&service={{ selected_service }}" class="lang-btn {% if lang == 'ru' %}active{% endif %}">RU</a>
-        <a href="/?lang=uz&service={{ selected_service }}" class="lang-btn {% if lang == 'uz' %}active{% endif %}">UZ</a>
-        <a href="/departments?lang={{ lang }}" class="lang-btn dept-btn">📊 {{ t.dept_stats }}</a>
-        <a href="/?lang={{ lang }}&service={{ selected_service }}" class="lang-btn" title="Refresh">↻</a>
+    <a href="/?lang={{ lang }}" class="topbar-brand">
+        <div class="brand-icon">🏥</div>
+        <div class="brand-text">
+            <span class="brand-name">KIDS DOCTOR</span>
+            <span class="brand-sub">Bolalar klinikasi</span>
+        </div>
+    </a>
+    <div class="topbar-nav">
+        <a href="/?lang=ru&service={{ selected_service }}" class="nav-btn {% if lang == 'ru' %}active{% endif %}">RU</a>
+        <a href="/?lang=uz&service={{ selected_service }}" class="nav-btn {% if lang == 'uz' %}active{% endif %}">UZ</a>
+        <a href="/departments?lang={{ lang }}" class="nav-btn pink-outline">📊 {{ t.dept_stats }}</a>
+        <a href="/?lang={{ lang }}&service={{ selected_service }}" class="nav-btn refresh" title="Refresh">↻</a>
     </div>
 </div>
 
@@ -280,37 +357,55 @@
 
     {% if error %}
     <div class="error-box">
-        <strong>⚠️ Database not found.</strong> Send at least one message to the bot first to initialise it.<br>
+        <strong>⚠️ Database not found.</strong> Send at least one message to the bot first.<br>
         <small>{{ error }}</small>
     </div>
 
     {% else %}
 
+    <!-- HERO -->
+    <div class="hero">
+        <div class="hero-emoji">🦒</div>
+        <div>
+            <span class="hero-label">Admin Panel</span>
+            <div class="hero-title">Kids Doctor Dashboard</div>
+            <div class="hero-sub">Foydalanuvchilar va sharhlar boshqaruv paneli</div>
+        </div>
+    </div>
+
     <!-- STATS -->
     <div class="stats-row">
         <div class="stat-card">
-            <div class="stat-label">{{ t.total_users }}</div>
-            <div class="stat-value">{{ total_users }}</div>
+            <div class="stat-icon">👥</div>
+            <div>
+                <div class="stat-label">{{ t.total_users }}</div>
+                <div class="stat-value">{{ total_users }}</div>
+            </div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">{{ t.total_reviews }}</div>
-            <div class="stat-value">{{ total_reviews }}</div>
-        </div>
-        <div class="stat-card amber">
-            <div class="stat-label">{{ t.avg_rating }}</div>
-            <div class="stat-value">{% if avg_rating > 0 %}{{ avg_rating }}{% else %}—{% endif %}</div>
-            {% if avg_rating > 0 %}
-            <div class="stat-stars">
-                {% for i in range(avg_rating | int) %}★{% endfor %}{% if avg_rating % 1 >= 0.5 %}½{% endif %}
+            <div class="stat-icon">💬</div>
+            <div>
+                <div class="stat-label">{{ t.total_reviews }}</div>
+                <div class="stat-value">{{ total_reviews }}</div>
             </div>
-            {% endif %}
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div>
+                <div class="stat-label">{{ t.avg_rating }}</div>
+                <div class="stat-value">{% if avg_rating > 0 %}{{ avg_rating }}{% else %}—{% endif %}</div>
+                {% if avg_rating > 0 %}
+                <div class="stat-stars">
+                    {% for i in range(avg_rating | int) %}★{% endfor %}{% if avg_rating % 1 >= 0.5 %}½{% endif %}
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 
     <!-- REVIEWS -->
     <div class="section-title">{{ t.feedback }}</div>
 
-    <!-- Department filter tabs -->
     <div class="filter-wrap">
         <a href="/?lang={{ lang }}&service=all"
            class="filter-tab {% if selected_service == 'all' %}active{% endif %}">
@@ -335,13 +430,20 @@
             {% set name = (r.first_name or '') ~ (' ' ~ r.surname if r.surname else '') %}
             {% set initial = (r.first_name or r.surname or '?')[0] | upper %}
             {% set dept_map = {
-                'pediatrician': 'Педиатр / Pediatr',
-                'dentist':      'Стоматолог / Stomatolog',
-                'ent':          'ЛОР / LOR',
-                'orthopedist':  'Ортопед / Ortoped',
-                'allergist':    'Аллерголог / Allergolog',
-                'massage':      'Массаж / Massaj',
-                'diagnostics':  'Диагностика / Diagnostika'
+                'pediatrician':    'Педиатр / Pediatr',
+                'neurology':       'Невролог / Nevrolog',
+                'dentist':         'Стоматолог / Stomatolog',
+                'ent':             'ЛОР / LOR',
+                'orthopedist':     'Ортопед / Ortoped',
+                'allergist':       'Аллерголог / Allergolog',
+                'immunology':      'Иммунолог / Immunolog',
+                'gynecology':      'Гинеколог / Ginekolog',
+                'massage':         'Массаж / Massaj',
+                'laboratory':      'Лаборатория / Lab',
+                'neurosonography': 'Нейросоно / NSG',
+                'uzi':             'УЗИ / UZI',
+                'procedure':       'Процедуры / Muolaja',
+                'diagnostics':     'Диагностика / Diagnostika'
             } %}
             <div class="review-card">
                 <div class="review-avatar">{{ initial }}</div>
@@ -356,7 +458,7 @@
                     <div class="review-text">{{ r.review_text }}</div>
                 </div>
                 <div class="review-stars">
-                    {% for i in range(r.rating) %}★{% endfor %}{% for i in range(5 - r.rating) %}<span style="color:#E5E7EB">★</span>{% endfor %}
+                    {% for i in range(r.rating) %}★{% endfor %}{% for i in range(5 - r.rating) %}<span style="color:#E4E9F7">★</span>{% endfor %}
                 </div>
             </div>
             {% endfor %}
