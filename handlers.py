@@ -6,6 +6,11 @@ from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove, ErrorEvent
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
+import aiohttp
+try:
+    from aiohttp_socks import ProxyError as SocksProxyError
+except ImportError:
+    SocksProxyError = None
 
 import database
 from keyboards import language_keyboard, welcome_back_keyboard, department_keyboard, rating_keyboard
@@ -27,7 +32,11 @@ LANG_BUTTONS = {
 
 @router.error()
 async def error_handler(event: ErrorEvent):
-    logging.error(f"Aiogram handler error: {event.exception}\n{traceback.format_exc()}")
+    exc = event.exception
+    logging.error(f"Aiogram handler error: {exc}\n{traceback.format_exc()}")
+    # Re-raise network/proxy errors → webhook returns 500 → Telegram retries automatically
+    if isinstance(exc, aiohttp.ClientError) or (SocksProxyError and isinstance(exc, SocksProxyError)):
+        raise exc
 
 
 @router.message(Command("start"))
@@ -102,7 +111,9 @@ async def handle_rating(callback: CallbackQuery, state: FSMContext):
     logging.info(f"[rating] user={user_id} bot_state={bot_state!r} data={callback.data}")
     if bot_state != ST_WAITING_RATING:
         logging.warning(f"[rating] unexpected state {bot_state!r} for user {user_id}")
-        await callback.answer()
+        # Show a toast so the user knows their tap was received but already processed
+        already = "Sharh yozing ✍️" if lang == "uz" else "Напишите комментарий ✍️"
+        await callback.answer(already, show_alert=False)
         return
     data = json.loads(await database.get_bot_state_data(user_id) or "{}")
     data["rating"] = int(callback.data.split(":", 1)[1])
