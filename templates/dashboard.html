@@ -272,6 +272,7 @@
         <a href="/?lang=ru&service={{ selected_service }}" class="lang-btn {% if lang == 'ru' %}active{% endif %}">RU</a>
         <a href="/?lang=uz&service={{ selected_service }}" class="lang-btn {% if lang == 'uz' %}active{% endif %}">UZ</a>
         <a href="/departments?lang={{ lang }}" class="lang-btn dept-btn">📊 {{ t.dept_stats }}</a>
+        <a href="/?lang={{ lang }}&service={{ selected_service }}" class="lang-btn" title="Refresh">↻</a>
     </div>
 </div>
 
