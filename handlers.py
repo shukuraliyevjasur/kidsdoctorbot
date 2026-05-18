@@ -34,7 +34,6 @@ LANG_BUTTONS = {
 async def error_handler(event: ErrorEvent):
     exc = event.exception
     logging.error(f"Aiogram handler error: {exc}\n{traceback.format_exc()}")
-    # Re-raise network/proxy errors → webhook returns 500 → Telegram retries automatically
     if isinstance(exc, aiohttp.ClientError) or (SocksProxyError and isinstance(exc, SocksProxyError)):
         raise exc
 
@@ -73,8 +72,9 @@ async def handle_language(message: Message, state: FSMContext):
             reply_markup=welcome_back_keyboard(lang),
         )
     else:
-        await database.set_bot_state(user_id, ST_WAITING_NAME)
+        # Send FIRST — if proxy fails, state stays unchanged → Telegram retries
         await message.answer(_("enter_name", lang), reply_markup=ReplyKeyboardRemove())
+        await database.set_bot_state(user_id, ST_WAITING_NAME)
 
 
 @router.message(F.text.in_([_("leave_review", "uz"), _("leave_review", "ru")]))
@@ -98,9 +98,10 @@ async def handle_department(callback: CallbackQuery, state: FSMContext):
     lang = await database.get_user_language(user_id)
     dept = callback.data.split(":", 1)[1]
     logging.info(f"[dept] user={user_id} dept={dept}")
-    await database.set_bot_state(user_id, ST_WAITING_RATING, json.dumps({"department": dept}))
+    # Send FIRST, then save state — safe for retries
     await callback.message.answer(_("choose_rating", lang), reply_markup=rating_keyboard())
     await callback.answer()
+    await database.set_bot_state(user_id, ST_WAITING_RATING, json.dumps({"department": dept}))
 
 
 @router.callback_query(F.data.startswith("rating:"))
@@ -110,16 +111,16 @@ async def handle_rating(callback: CallbackQuery, state: FSMContext):
     bot_state = await database.get_bot_state(user_id)
     logging.info(f"[rating] user={user_id} bot_state={bot_state!r} data={callback.data}")
     if bot_state != ST_WAITING_RATING:
-        logging.warning(f"[rating] unexpected state {bot_state!r} for user {user_id}")
-        # Show a toast so the user knows their tap was received but already processed
         already = "Sharh yozing ✍️" if lang == "uz" else "Напишите комментарий ✍️"
         await callback.answer(already, show_alert=False)
         return
     data = json.loads(await database.get_bot_state_data(user_id) or "{}")
     data["rating"] = int(callback.data.split(":", 1)[1])
-    await database.set_bot_state(user_id, ST_WAITING_COMMENT, json.dumps(data))
+    # Send FIRST, then save state — if proxy 503s, state stays "waiting_for_rating"
+    # so Telegram retry re-enters this branch and tries again
     await callback.message.answer(_("enter_comment", lang))
     await callback.answer()
+    await database.set_bot_state(user_id, ST_WAITING_COMMENT, json.dumps(data))
 
 
 @router.message()
@@ -137,12 +138,14 @@ async def handle_text(message: Message, state: FSMContext):
         name = message.text.strip() or message.from_user.first_name or "—"
         logging.info(f"[text] registering name={name!r} for user={user_id}")
         await database.register_user(user_id, message.from_user.username or "", name, "")
-        await database.clear_bot_state(user_id)
+        # Send department keyboard BEFORE clearing state — retry-safe
         await _ask_department(message, lang)
+        await database.clear_bot_state(user_id)
 
     elif bot_state == ST_WAITING_COMMENT:
         data = json.loads(await database.get_bot_state_data(user_id) or "{}")
         logging.info(f"[text] saving comment for user={user_id} dept={data.get('department')}")
         await database.save_review(user_id, data.get("department", ""), data.get("rating", 0), message.text)
-        await database.clear_bot_state(user_id)
+        # Send confirmation BEFORE clearing state
         await message.answer(_("review_submitted", lang), reply_markup=welcome_back_keyboard(lang))
+        await database.clear_bot_state(user_id)
